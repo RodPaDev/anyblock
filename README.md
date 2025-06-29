@@ -1,17 +1,17 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AnyBlock
+
+AnyBlock is a website that allows you to generate code with AI for each popular framework. It creates components only in React, Vue, Svelte, Solid, and Angular.
 
 ## Getting Started
 
-First, run the development server:
+First, run both the development server and Inngest server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Run the Next.js development server
 pnpm dev
-# or
-bun dev
+
+# In a separate terminal, run the Inngest server
+pnpm dev:inngest
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
