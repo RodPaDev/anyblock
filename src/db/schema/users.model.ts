@@ -1,7 +1,8 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import genId from "../utils/generate-id";
 export const usersTable = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
+  id: text("id").primaryKey().$defaultFn(genId),
+  name: text().notNull(),
   age: integer().notNull(),
-  email: varchar({ length: 255 }).notNull().unique(),
+  email: text().notNull().unique(),
 });

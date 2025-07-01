@@ -1,3 +1,5 @@
+import { db } from "@/db";
+import { fragmentsTable, messagesTable } from "@/db/schema";
 import { Sandbox } from "@e2b/code-interpreter";
 import { AgentResult, TextMessage } from "@inngest/agent-kit";
 
@@ -14,10 +16,44 @@ export function lastAssitantTextMessageContent(result: AgentResult) {
   const message = result.output[lastAssistantTextMeessage] as
     | TextMessage
     | undefined;
-  
+
   return message?.content
-   ? typeof message.content === "string"
-     ? message.content
-     : message.content.map((c) => c.text).join("") 
+    ? typeof message.content === "string"
+      ? message.content
+      : message.content.map((c) => c.text).join("")
     : undefined;
 }
+
+export const createMessageWithFragment = async (messageData: {
+  content: string;
+  role: "user" | "assistant";
+  type: "result" | "error";
+  fragment: {
+    sandboxUrl: string;
+    title: string;
+    files?: any;
+  };
+}) => {
+  // Insert the message first
+  const [message] = await db
+    .insert(messagesTable)
+    .values({
+      content: messageData.content,
+      role: messageData.role,
+      type: messageData.type,
+    })
+    .returning();
+
+  // Insert the related fragment
+  const [fragment] = await db
+    .insert(fragmentsTable)
+    .values({
+      messageId: message.id,
+      sandboxUrl: messageData.fragment.sandboxUrl,
+      title: messageData.fragment.title,
+      files: messageData.fragment.files,
+    })
+    .returning();
+
+  return { message, fragment };
+};
