@@ -4,59 +4,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function Page() {
+  const router = useRouter()
   const [value, setValue] = useState<string>("");
   const trpc = useTRPC();
-  const messages = useQuery(trpc.message.getMany.queryOptions());
-  const createMessage = useMutation(
-    trpc.message.create.mutationOptions({
-      onSuccess: () => toast.success("Message created successfully!"),
-    })
-  );
+  const createProject = useMutation(trpc.projects.create.mutationOptions({
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    onSuccess: (data) => {
+      router.push(`/projects/${data.id}`);
+    }
+  }))
 
   return (
-    <div className="flex flex-col h-screen w-screen items-center justify-center">
-      <h1 className="text-2xl font-bold">Welcome to Anyblock!</h1>
-
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        type="text"
-        className="w-full max-w-md mt-4 mb-4"
-      />
-
+  <div className="h-screen w-screen flex items-center justify-center">
+    <div className="max-w-7xl mx-auto flex items-center flex-col gap-y-4 justify-center">
+      <Input value={value} onChange={(e) => setValue(e.target.value)} className="w-full max-w-md" />
       <Button
-        disabled={createMessage.isPending}
-        onClick={() => createMessage.mutate({ value })}
+        disabled={createProject.isPending}
+        onClick={() => createProject.mutate({ value })}
       >
-        {createMessage.isPending ? "Creating..." : "Create Message"}
+        Submit
       </Button>
-
-      <div className="mt-8 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4">Messages</h2>
-        <ul className="space-y-2">
-          {messages.data?.map((message) => (
-            <li key={message.id} className="p-2 border rounded">
-              <strong className="block mb-1">{message.role}</strong>
-              {message.content}
-
-              {message.fragment && (
-                <a
-                  href={message.fragment?.sandboxUrl}
-                  className="block mt-2 text-blue-500 hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {message.fragment?.title || "View Sandbox"}
-                </a>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
-  );
+  </div>
+  )
 }

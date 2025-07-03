@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { fragmentsTable, messagesTable } from "@/db/schema";
+import { fragmentsTable, messageTable } from "@/db/schema";
 import { Sandbox } from "@e2b/code-interpreter";
 import { AgentResult, TextMessage } from "@inngest/agent-kit";
 
@@ -24,7 +24,7 @@ export function lastAssitantTextMessageContent(result: AgentResult) {
     : undefined;
 }
 
-export const createMessageWithFragment = async (messageData: {
+export const createMessageWithFragment = async (projectId: string, messageData: {
   content: string;
   role: "user" | "assistant";
   type: "result" | "error";
@@ -36,8 +36,9 @@ export const createMessageWithFragment = async (messageData: {
 }) => {
   // Insert the message first
   const [message] = await db
-    .insert(messagesTable)
+    .insert(messageTable)
     .values({
+      projectId,
       content: messageData.content,
       role: messageData.role,
       type: messageData.type,

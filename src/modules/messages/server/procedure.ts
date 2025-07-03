@@ -1,12 +1,12 @@
 import { db } from "@/db";
-import { messagesTable } from "@/db/schema/message.model";
+import { messageTable } from "@/db/schema/message.model";
 import { inngest } from "@/inngest/client";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 
 export const messagesRouter = createTRPCRouter({
   getMany: baseProcedure.query(async () => {
-    const messages = await db.query.messagesTable.findMany({
+    const messages = await db.query.messageTable.findMany({
       with: {
         fragment: true,
       },
@@ -17,11 +17,13 @@ export const messagesRouter = createTRPCRouter({
   create: baseProcedure
     .input(
       z.object({
+        projectId: z.string().min(1, "Project ID is required"),
         value: z.string().min(1, "Message cannot be empty"),
       })
     )
     .mutation(async ({ input }) => {
-      const createdMsg = await db.insert(messagesTable).values({
+      const createdMsg = await db.insert(messageTable).values({
+        projectId: input.projectId,
         content: input.value,
         role: "user",
         type: "result",

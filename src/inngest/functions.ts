@@ -163,7 +163,7 @@ export const codeAgent = inngest.createFunction(
     });
 
     await step.run("save-result", async () => {
-      await createMessageWithFragment({
+      await createMessageWithFragment(event.data.projectId,{
         content: result.state.data.summary,
         role: "assistant",
         type: "result",
