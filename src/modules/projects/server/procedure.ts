@@ -5,8 +5,32 @@ import { inngest } from "@/inngest/client";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 import { generateSlug } from "random-word-slugs";
+import { TRPCError } from "@trpc/server";
 
 export const projectsRouter = createTRPCRouter({
+    getOne: baseProcedure
+    .input(
+      z.object({
+        projectId: z.string().min(1, "Project ID is required"),
+      })
+    )
+    .query(async ({input}) => {
+    const project = await db.query.projectTable.findFirst({
+      where: (t, { eq }) => eq(t.id, input.projectId),
+      with: {
+        messages: true,
+      }
+    });
+
+    if (!project) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Project not found",
+      })
+    }
+
+    return project;
+  }),
   getMany: baseProcedure.query(async () => {
     const projects = await db.query.projectTable.findMany({
       with: {
