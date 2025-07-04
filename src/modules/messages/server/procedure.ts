@@ -5,20 +5,27 @@ import { baseProcedure, createTRPCRouter } from "@/trpc/init";
 import { z } from "zod";
 
 export const messagesRouter = createTRPCRouter({
-  getMany: baseProcedure.query(async () => {
-    const messages = await db.query.messageTable.findMany({
-      with: {
-        fragment: true,
-      },
-      orderBy: (t, { desc }) => desc(t.createdAt),
-    });
-    return messages;
-  }),
+  getMany: baseProcedure
+    .input(
+      z.object({
+        projectId: z.string().min(1, "Project ID is required"),
+      })
+    )
+    .query(async ({ input }) => {
+      const messages = await db.query.messageTable.findMany({
+        where: (t, { eq }) => eq(t.projectId, input.projectId),
+        with: {
+          fragment: true,
+        },
+        orderBy: (t, { asc }) => asc(t.createdAt),
+      });
+      return messages;
+    }),
   create: baseProcedure
     .input(
       z.object({
         projectId: z.string().min(1, "Project ID is required"),
-        value: z.string().min(1, "Message cannot be empty"),
+        value: z.string().min(1, "Value cannot be empty").max(10000, "Value is too long"),
       })
     )
     .mutation(async ({ input }) => {
@@ -31,7 +38,7 @@ export const messagesRouter = createTRPCRouter({
 
       await inngest.send({
         name: "code-agent/run",
-        data: { value: input.value },
+        data: { value: input.value, projectId: input.projectId },
       });
 
       return createdMsg;
