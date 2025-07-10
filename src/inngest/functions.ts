@@ -164,7 +164,7 @@ export const codeAgent = inngest.createFunction(
 
     await step.run("save-result", async () => {
       await createMessageWithFragment(event.data.projectId,{
-        content: result.state.data.summary,
+        content: result.state.data.summary || "Error: No summary provided.",
         role: "assistant",
         type: "result",
         fragment: {
