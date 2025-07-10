@@ -113,7 +113,7 @@ function FragmentCard({
       className={cn(
         "flex items-start text-start gap-2 border rounded-lg bg-muted w-fit p-3 hover:bg-secondary transition-colors",
         isActiveFragment &&
-          "bg-primary text-primary border-primary hover:bg-primary"
+          "bg-primary text-secondary border-primary hover:bg-primary"
       )}
       onClick={handleClick}
     >
