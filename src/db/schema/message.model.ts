@@ -22,6 +22,23 @@ export const messageTable = pgTable("messages", {
     .notNull(),
 });
 
+export const messagesRelations = relations(messageTable, ({ one }) => ({
+  fragment: one(fragmentsTable, {
+    fields: [messageTable.id],
+    references: [fragmentsTable.messageId],
+  }),
+  project: one(projectTable, {
+    fields: [messageTable.projectId],
+    references: [projectTable.id],
+        relationName: "messages"
+  }),
+}));
+
+
+export type Message<Extend = {}> = typeof messageTable.$inferSelect & Extend;
+export type MessageRole = Message["role"];
+export type MessageType = Message["type"];
+
 export const fragmentsTable = pgTable("fragments", {
   id: text("id").primaryKey().$defaultFn(genId),
   messageId: text("message_id")
@@ -39,13 +56,5 @@ export const fragmentsTable = pgTable("fragments", {
     .notNull(),
 });
 
-export const messagesRelations = relations(messageTable, ({ one }) => ({
-  fragment: one(fragmentsTable, {
-    fields: [messageTable.id],
-    references: [fragmentsTable.messageId],
-  }),
-  project: one(projectTable, {
-    fields: [messageTable.projectId],
-    references: [projectTable.id],
-  }),
-}));
+export type Fragment = typeof fragmentsTable.$inferSelect;
+
