@@ -54,7 +54,7 @@ export const codeAgent = inngest.createFunction(
                   },
                 });
                 return result.stdout;
-              } catch (e) {
+              } catch {
                 console.error(
                   `Command failed: ${command}\n stdout: ${buffers.stdout}\n stderr: ${buffers.stderr}`
                 );
