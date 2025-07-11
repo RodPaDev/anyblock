@@ -12,6 +12,8 @@ interface Props {
   children: React.ReactNode;
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
+  open?: boolean;
+  delayDuration?: number;
 }
 
 export function Hint({
@@ -19,13 +21,13 @@ export function Hint({
   children,
   side = "top",
   align = "center",
+  open,
+  delayDuration,
 }: Props) {
   return (
     <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-            {children}
-        </TooltipTrigger>
+      <Tooltip open={open} delayDuration={delayDuration}>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side={side} align={align}>
           <p>{text}</p>
         </TooltipContent>

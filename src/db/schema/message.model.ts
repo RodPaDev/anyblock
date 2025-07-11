@@ -30,12 +30,11 @@ export const messagesRelations = relations(messageTable, ({ one }) => ({
   project: one(projectTable, {
     fields: [messageTable.projectId],
     references: [projectTable.id],
-        relationName: "messages"
+    relationName: "messages",
   }),
 }));
 
-
-export type Message<Extend = {}> = typeof messageTable.$inferSelect & Extend;
+export type Message<Extend = object> = typeof messageTable.$inferSelect & Extend;
 export type MessageRole = Message["role"];
 export type MessageType = Message["type"];
 
@@ -47,7 +46,7 @@ export const fragmentsTable = pgTable("fragments", {
     .unique(),
   sandboxUrl: text("sandbox_url").notNull(),
   title: text("title").notNull(),
-  files: json("files"),
+  files: json("files").$type<{ [path: string]: string }>().notNull(),
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
@@ -57,4 +56,4 @@ export const fragmentsTable = pgTable("fragments", {
 });
 
 export type Fragment = typeof fragmentsTable.$inferSelect;
-
+ 
