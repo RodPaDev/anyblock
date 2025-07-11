@@ -12,15 +12,23 @@ interface Props {
   setActiveFragment: (fragment: Fragment | null) => void;
 }
 
-export default function MessagesContainer({ projectId, activeFragment, setActiveFragment }: Props) {
+export default function MessagesContainer({
+  projectId,
+  activeFragment,
+  setActiveFragment,
+}: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lastAssistantMessageIdRef = useRef<string | null>(null);
   const trpc = useTRPC();
   const { data: messages } = useSuspenseQuery(
-    trpc.messages.getMany.queryOptions({
-      projectId,
-    }, {
-      refetchInterval: 5000, // TODO: temporary live message update
-    }),
+    trpc.messages.getMany.queryOptions(
+      {
+        projectId,
+      },
+      {
+        refetchInterval: 5000, // TODO: temporary live message update
+      }
+    )
   );
 
   useEffect(() => {
@@ -28,8 +36,13 @@ export default function MessagesContainer({ projectId, activeFragment, setActive
       (message) => message.role === "assistant" && !!message.fragment
     );
 
-    if (latestAssistantMessageWithFragment) {
-      setActiveFragment(latestAssistantMessageWithFragment.fragment);
+    if (
+      latestAssistantMessageWithFragment &&
+      latestAssistantMessageWithFragment.id !==
+        lastAssistantMessageIdRef.current
+    ) {
+      setActiveFragment(latestAssistantMessageWithFragment.fragment || null);
+      lastAssistantMessageIdRef.current = latestAssistantMessageWithFragment.id;
     }
   }, [messages, setActiveFragment]);
 
@@ -41,7 +54,8 @@ export default function MessagesContainer({ projectId, activeFragment, setActive
     });
   }, [messages.length]);
 
-  const isLastMessageFromUser = messages.length > 0 && messages.at(-1)?.role === "user";
+  const isLastMessageFromUser =
+    messages.length > 0 && messages.at(-1)?.role === "user";
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -59,9 +73,7 @@ export default function MessagesContainer({ projectId, activeFragment, setActive
               type={message.type}
             />
           ))}
-          {isLastMessageFromUser && (
-           <MessageLoading />
-          )}
+          {isLastMessageFromUser && <MessageLoading />}
           <div ref={bottomRef} />
         </div>
       </div>
