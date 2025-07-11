@@ -7,9 +7,10 @@ import {
 } from "@/components/ui/resizable";
 import { useTRPC } from "@/trpc/client";
 import MessagesContainer from "../components/messages-container";
-import { Suspense, useState } from "react";
+import { act, Suspense, useState } from "react";
 import { Fragment } from "@/db/schema";
 import { ProjectHeader } from "../components/project-header";
+import FragmentWeb from "../components/fragment-web";
 
 interface Props {
   projectId: string;
@@ -40,7 +41,7 @@ export default function ProjectView({ projectId }: Props) {
         </ResizablePanel>
         <ResizableHandle withHandle={true} />
         <ResizablePanel defaultSize={65} minSize={50}>
-          TODO: Preview
+          {!!activeFragment && <FragmentWeb fragment={activeFragment} />}
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
