@@ -37,7 +37,7 @@ export function ProjectHeader({ projectId }: Props) {
   );
 
   return (
-    <header className="p-2 flex justify-between items-center border-b">
+    <header className="p-2 flex justify-between items-center border-b h-14">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

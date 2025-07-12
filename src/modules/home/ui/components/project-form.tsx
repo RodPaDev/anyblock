@@ -73,7 +73,7 @@ export function ProjectForm() {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className={cn(
-            "relative border p-4 pt-1 rounded-xl bg-sidebar dark:bg-sidebar transition-all",
+            "relative border p-4 pt-1 bg-sidebar dark:bg-sidebar transition-all",
             isFocused && "shadow-xs"
           )}
         >
@@ -128,7 +128,7 @@ export function ProjectForm() {
               key={template.title}
               variant="outline"
               size="sm"
-              className="bg-white dark:bg-sidebar"
+              className="bg-background! hover:bg-muted-foreground/20! border-border!"
               onClick={() => onSelectTemplate(template)}
             >
               {template.emoji} {template.title}

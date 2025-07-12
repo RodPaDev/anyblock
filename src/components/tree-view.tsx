@@ -14,6 +14,13 @@ import {
 import { ChevronRightIcon, FileIcon, FolderIcon } from "lucide-react";
 import { Collapsible } from "@radix-ui/react-collapsible";
 import { CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
+import { cn } from "@/lib/utils";
+import { da } from "date-fns/locale";
+
+const normalClasses =
+  "data-[active=true]:bg-primary/20 data-[active=true]:hover:bg-primary/30 data-[active=true]:cursor-default ";
+const darkClasses =
+  "data-[active=true]:dark:bg-muted data-[active=true]:hover:bg-muted/30 data-[active=true]:dark:text-white/80 dark:hover:bg-muted dark:hover:text-muted-foreground";
 
 interface TreeViewProps {
   files: TreeItem[];
@@ -68,7 +75,7 @@ function Tree({ item, selectedValue, onSelect, parentPath = "" }: TreeProps) {
     return (
       <SidebarMenuButton
         isActive={isSelected}
-        className="data-[active=true]:bg-transparent"
+        className={cn(darkClasses, normalClasses)}
         onClick={() => onSelect(currentPath)}
       >
         <FileIcon />
@@ -85,7 +92,7 @@ function Tree({ item, selectedValue, onSelect, parentPath = "" }: TreeProps) {
         defaultOpen={true}
       >
         <CollapsibleTrigger asChild>
-          <SidebarMenuButton>
+          <SidebarMenuButton className={cn(darkClasses, normalClasses)}>
             <ChevronRightIcon className="transition-transform" />
             <FolderIcon />
             <span className="truncate">{name}</span>
@@ -108,4 +115,3 @@ function Tree({ item, selectedValue, onSelect, parentPath = "" }: TreeProps) {
     </SidebarMenuItem>
   );
 }
-

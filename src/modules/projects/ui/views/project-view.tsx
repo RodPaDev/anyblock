@@ -54,7 +54,7 @@ export default function ProjectView({ projectId }: Props) {
             value={tabState}
             onValueChange={(value) => setTabState(value as typeof tabState)}
           >
-            <div className="w-full flex items-center p-2 border-b gap-x-2">
+            <div className="w-full flex items-center p-2 border-b gap-x-2 h-14">
               <TabsList className="h-8 p-0 border rounded-md">
                 <TabsTrigger value="preview" className="rounded-md">
                   <EyeIcon /> <span>Preview</span>

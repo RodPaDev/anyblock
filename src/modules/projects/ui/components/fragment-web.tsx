@@ -36,7 +36,7 @@ export default function FragmentWeb({ fragment }: Props) {
 
   return (
     <div className="flex flex-col h-full w-full">
-      <div className="p-2 border-b bg-sidebar flex items-center gap-x-2">
+      <div className="p-2 border-b bg-sidebar flex items-center gap-x-2 ">
         <Hint text="Refresh" side="bottom" align="start">
           <Button size="sm" variant="outline" onClick={handleRefreshClick}>
             <RefreshCwIcon />

@@ -15,7 +15,7 @@ export function ProjectList() {
   );
 
   return (
-    <div className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4">
+    <div className="w-full bg-background dark:bg-black rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4">
       <h2 className="text-2xl font-semibold">Your Anyblocks</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {projects?.length === 0 && (
@@ -30,10 +30,10 @@ export function ProjectList() {
           <Button
             key={project.id}
             variant="outline"
-            className="font-normal h-auto justify-start w-full text-start p-4"
+            className="font-normal h-auto justify-start w-full text-start p-4 "
             asChild
           >
-            <Link href={`/projects/${project.id}`}>
+            <Link className="bg-background! border-border! hover:bg-muted!" href={`/projects/${project.id}`}>
               <div className="flex items-center gap-x-4">
                 <Logo size={32} className="object-contain" />
                 <div className="flex flex-col">
