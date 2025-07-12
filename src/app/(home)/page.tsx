@@ -13,7 +13,11 @@ export default function Page() {
           Anyblock
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground text-center">
-          Build once, convert anywhere. Frameworks are now interoperable.
+          Build once, convert anywhere.{" "}
+          <span className="relative px-2 bg-primary font-medium text-primary-foreground">
+            Frameworks are now interoperable.
+
+          </span>
         </p>
         <div className="max-w-3xl mx-auto w-full">
           <ProjectForm />
